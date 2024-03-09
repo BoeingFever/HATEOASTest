@@ -7,6 +7,7 @@
 
 name: Java CI with Gradle
 
+run-name: ${{github.actor}} is experimenting with github action
 on:
   push:
     branches: [ "main" ]
@@ -15,6 +16,7 @@ on:
 
 jobs:
   unit-test:
+    name: unit-test
     runs-on: ubuntu-latest
 
     steps:
@@ -35,10 +37,11 @@ jobs:
       run: ./gradlew build
       
   build:
+    name: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
+    # permissions:
+    #   contents: read
+    needs: unit-test
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
