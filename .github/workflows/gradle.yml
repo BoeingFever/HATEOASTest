@@ -39,9 +39,11 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
-    # permissions:
-    #   contents: read
+    permissions:
+      contents: read
+      packages: write
     needs: unit-test
+    
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
