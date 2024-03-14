@@ -30,9 +30,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/boeingfever/HATEOASTest")
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("BoeingFever")
-                password = project.findProperty("gpr.key") ?: System.getenv("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
-")
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
             }
         }
     }
