@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.2'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id("maven-publish")
 }
 
 group = 'com.example'
@@ -21,6 +22,25 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/boeingfever/HATEOASTest")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("BoeingFever")
+                password = project.findProperty("gpr.key") ?: System.getenv("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
+")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
 
 tasks.named('test') {
