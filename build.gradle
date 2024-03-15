@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.2'
 	id 'io.spring.dependency-management' version '1.1.4'
-	id("maven-publish")
+	id 'maven-publish'
 }
 
 group = 'com.example'
@@ -36,8 +36,11 @@ publishing {
         }
     }
     publications {
-        gpr(MavenPublication) {
-            from(components.java)
+        maven(MavenPublication) {
+	    groupId = 'com.example.HATEOASTest'
+	    artifactId = 'HATEOASTest'
+	    version = '1.0'
+            from components.java
         }
     }
 }
