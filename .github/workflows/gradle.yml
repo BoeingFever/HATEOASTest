@@ -63,8 +63,11 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew build -DskipTests
 
-    - name: Docker build using spring boot gradle plugins, not even need to write myself the Dockerfile
-      run: ./gradlew bootBuildImage --imageName=test/myapp
+    - name: list the filesystem content
+      run: ls
+#    - name: Docker build using spring boot gradle plugins, not even need to write myself the Dockerfile
+#      run: ./gradlew bootBuildImage --imageName=test/myapp
+
     # - name: Publish to GitHub Packages
     #   run: ./gradlew publish
     #   env:
