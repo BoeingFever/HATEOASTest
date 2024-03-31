@@ -15,7 +15,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  unit-test:
+  build:
     name: unit-test
     runs-on: ubuntu-latest
 
@@ -26,52 +26,31 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-
     # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Run unit test with gradle
-      run: ./gradlew test
+    - name: Build with Gradle Wrapper
+      run: ./gradlew build #-DskipTests
       
-  build:
+  docker-build:
     name: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-    needs: unit-test
+    needs: build
     
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
-    # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
-    # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-      
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build -DskipTests
-
-    - name: list the filesystem content
+    - name: list current filesystem content
       run: ls -la
-
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-
     - name: docker build and push image to dockerhub
       run: |
         docker build --build-arg JAR_FILE=build/libs/HATEOASTest-0.0.1-SNAPSHOT.jar -t littglejack/cicdlearn:1.0.0-beta .
