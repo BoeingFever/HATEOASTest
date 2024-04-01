@@ -74,7 +74,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: docker build and push image to dockerhub
       run: |
-        docker build --build-arg JAR_FILE=build/libs/HATEOASTest-0.0.1-SNAPSHOT.jar -t littglejack/cicdlearn:1.0.0-beta .
+        docker build --build-arg JAR_FILE=artifact/*.jar -t littglejack/cicdlearn:1.0.0-beta .
         docker push littglejack/cicdlearn:1.0.0-beta
 #    - name: Docker build using spring boot gradle plugins, not even need to write myself the Dockerfile
 #      run: ./gradlew bootBuildImage --imageName=test/myapp
