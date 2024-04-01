@@ -34,7 +34,21 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle Wrapper
       run: ./gradlew build #-DskipTests
-      
+    - name: list current filesystem content
+      run: ls -la
+    # GitHub action jobs do not share their own workspace and the content, we can output some job values for subsequent jobs
+    # but this time we need the artifact for the subsequent jobs, so we use upload-artifact and download-artifact action
+    - name: upload the built jar
+      id: upload-built-jar
+      uses: actions/upload-artifact@v4
+      with:
+        path: build/libs/HATEOASTest-0.0.1-SNAPSHOT.jar
+        if-no-files-found: error
+        retention-days: 5
+        overwrite: true
+    - name: output the artifact ID
+      run: echo 'Artifact ID is ${{ steps.upload-built-jar.outputs.artifact-id }}'
+
   docker-build:
     name: build
     runs-on: ubuntu-latest
