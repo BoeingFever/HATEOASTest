@@ -56,8 +56,15 @@ jobs:
       contents: read
       packages: write
     needs: build
-    
+
     steps:
+#    - name: list current filesystem content
+#      run: ls -la
+    - name: download the built jar
+      id: download-built-jar
+      uses: actions/download-artifact@v4
+    - name: output the download-path
+      run: echo 'Artifact is downloaded to ${{ steps.download-built-jar.outputs.download-path }}'
     - name: list current filesystem content
       run: ls -la
     - name: Login to Docker Hub
