@@ -58,8 +58,7 @@ jobs:
     needs: build
 
     steps:
-#    - name: list current filesystem content
-#      run: ls -la
+    - uses: actions/checkout@v4
     - name: download the built jar
       id: download-built-jar
       uses: actions/download-artifact@v4
