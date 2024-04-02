@@ -63,9 +63,12 @@ jobs:
     - name: download the built jar from previous job, not repeat the build here again
       id: download-built-jar
       uses: actions/download-artifact@v4
-
+      
     - name: output the download-path
       run: echo 'Artifact is downloaded to ${{ steps.download-built-jar.outputs.download-path }}'
+    - name: extract the JAR contents with layer information
+     #for more info, refer to https://spring.io/guides/topicals/spring-boot-docker
+      run: java -Djarmode=layertools -jar artifact/*.jar extract
     - name: list current filesystem content
       run: ls -R
 
