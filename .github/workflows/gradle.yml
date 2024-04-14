@@ -53,6 +53,7 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     permissions:
+      id-token: write
       contents: read
       packages: write
     needs: build
@@ -78,7 +79,14 @@ jobs:
       run: |
         docker build --build-arg JAR_FILE=artifact/*.jar -t littglejack/cicdlearn:1.0.0-beta .
         docker push littglejack/cicdlearn:1.0.0-beta
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        audience: sts.amazonaws.com
+        aws-region: us-east-1
+        role-to-assume: arn:aws:iam::339713148173:role/GithubActTester
 #    - name: Docker build using spring boot gradle plugins, not even need to write myself the Dockerfile
+#      I don't see how useful of this function, in reality we still write ourself Dockerfile for customisation
 #      run: ./gradlew bootBuildImage --imageName=test/myapp
 
     # - name: Publish to GitHub Packages
