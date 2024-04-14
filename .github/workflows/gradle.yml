@@ -90,24 +90,37 @@ jobs:
     - name: list current filesystem content
       run: ls -Rl
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: docker build and push image to dockerhub
-      run: |
-        docker build -t littglejack/cicdlearn:1.0.0-beta .
-        docker push littglejack/cicdlearn:1.0.0-beta
-        
+    # - name: Login to Docker Hub
+    #   uses: docker/login-action@v3
+    #   with:
+    #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+    #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+    # - name: docker build and push image to dockerhub
+    #   run: |
+    #     docker build -t littglejack/cicdlearn:1.0.0-beta .
+    #     docker push littglejack/cicdlearn:1.0.0-beta
+
+   #  comment the command below cuz now we try to build docker image from extracted jar files instead of single jar
+   #      docker build --build-arg JAR_FILE=artifact/*.jar -t littglejack/cicdlearn:1.0.0-beta .
+
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
         audience: sts.amazonaws.com
         aws-region: us-east-1
         role-to-assume: arn:aws:iam::339713148173:role/GithubActTester
-#       comment the command below cuz now we try to build docker image from extracted jar files instead of single jar
-#       docker build --build-arg JAR_FILE=artifact/*.jar -t littglejack/cicdlearn:1.0.0-beta .
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+    - name: Build, tag, and push docker image to Amazon ECR
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: githubtest
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG    
+
 
 #    - name: Docker build using spring boot gradle plugins, not even need to write myself the Dockerfile
 #      I don't see how useful of this function, in reality we still write ourself Dockerfile for customisation
