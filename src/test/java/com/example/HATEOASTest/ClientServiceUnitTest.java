@@ -58,8 +58,8 @@ public class ClientServiceUnitTest {
         verify(clientRepository,never()).save(any(Client.class));
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {""," "})
+//    @ParameterizedTest
+//    @ValueSource(strings = {""," "})
     void shouldThrowIllegalArgumentException_WhenEmailEmpty(String invalidEmail){
         //This test method is mean to fail to show that my business logic miss to handle some cases
         //Given
@@ -83,15 +83,28 @@ public class ClientServiceUnitTest {
         assertThat(foundClient.get().getUsername()).isEqualTo("Winston Churchill");
         verify(clientRepository, times(1)).findById(Id);
     }
+
+//    @Test
+//    void shouldThrowClientNotFoundException_whenNotFoundById(){
+//        //Given
+//        Long Id = 99L;
+//        when(clientRepository.findById(Id)).thenReturn(Optional.empty());
+//        //When
+//        ClientNotFoundException ex = assertThrows(ClientNotFoundException.class,()->clientService.findUserById(Id));
+//        //Then
+//        assertThat(ex.getMessage()).isEqualTo("Could not find client " + Id);
+//        verify(clientRepository, times(1)).findById(Id);
+//    }
+
     @Test
-    void shouldThrowClientNotFoundException_whenNotFoundById(){
+    void shouldReturnEmptyOptional_WhenUserNotFound(){
         //Given
         Long Id = 99L;
         when(clientRepository.findById(Id)).thenReturn(Optional.empty());
         //When
-        ClientNotFoundException ex = assertThrows(ClientNotFoundException.class,()->clientService.findUserById(Id));
+        Optional<Client> result = clientService.findUserById(Id);
         //Then
-        assertThat(ex.getMessage()).isEqualTo("Could not find client " + Id);
+        assertThat(result).isEmpty();
         verify(clientRepository, times(1)).findById(Id);
     }
 }

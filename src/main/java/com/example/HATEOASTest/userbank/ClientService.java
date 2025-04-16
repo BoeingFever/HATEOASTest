@@ -25,8 +25,8 @@ public class ClientService {
 
     public Optional<Client> findUserById(Long id) {
         Optional<Client> myClient = clientRepository.findById(id);
-        if(myClient.isEmpty())
-            throw new ClientNotFoundException(id);
+//        if(myClient.isEmpty())
+//            throw new ClientNotFoundException(id);
         return myClient;
     }
 
