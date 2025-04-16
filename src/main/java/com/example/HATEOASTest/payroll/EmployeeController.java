@@ -47,7 +47,7 @@ public class EmployeeController {
     // Single item
 
     @GetMapping("/employees/{id}")
-    EntityModel<Employee> one(@PathVariable Long id) {
+    EntityModel<Employee> one(@PathVariable("id") Long id) {
 
         Employee emp = repository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
@@ -55,7 +55,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/employees/{id}")
-    ResponseEntity<?> replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id) {
+    ResponseEntity<?> replaceEmployee(@RequestBody Employee newEmployee, @PathVariable("id") Long id) {
 
         Employee updatedEmployee = repository.findById(id) //
                 .map(employee -> {
@@ -75,7 +75,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/employees/{id}")
-    ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
+    ResponseEntity<?> deleteEmployee(@PathVariable("id") Long id) {
         repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
