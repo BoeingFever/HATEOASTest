@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class User {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,9 +16,9 @@ public class User {
     private String email;
 
     // Default constructor for JPA
-    protected User() {}
+    protected Client() {}
 
-    public User(String username, String email) {
+    public Client(String username, String email) {
         this.username = username;
         this.email = email;
     }
