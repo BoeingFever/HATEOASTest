@@ -15,7 +15,7 @@ public class ClientService {
     }
 
     public Client createUser(ClientRequest clientRequest) {
-        if (clientRequest.getUsername() == null || clientRequest.getEmail() == null) {
+        if (clientRequest.username() == null || clientRequest.email() == null) {
             throw new IllegalArgumentException("Username and email cannot be null");
         }
         ObjectMapper mapper = new ObjectMapper();

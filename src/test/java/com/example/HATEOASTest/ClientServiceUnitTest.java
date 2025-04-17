@@ -34,14 +34,15 @@ public class ClientServiceUnitTest {
     Client client;
     @BeforeEach
     void setUpBeforeEachCase(){
-        client = new Client("Winston Churchill","winston@gmail.com");
+        client = new Client(1L,"Winston Churchill","winston@gmail.com");
     }
     @Test
     void shouldCreateClientRecord_WhenValidInfoIsProvided(){
         //Given
         when(clientRepository.save(any(Client.class))).thenReturn(client);
+        ClientRequest cr = new ClientRequest("Winston Churchill","winston@gmail.com");
         //When
-        Client savedClient = clientService.createUser(new ClientRequest("Winston Churchill","winston@gmail.com"));
+        Client savedClient = clientService.createUser(cr);
         //Then
         assertThat(savedClient.getEmail()).isEqualTo("winston@gmail.com");
         assertThat(savedClient.getUsername()).isEqualTo("Winston Churchill");

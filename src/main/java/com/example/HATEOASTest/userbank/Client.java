@@ -17,10 +17,10 @@ public class Client {
 
     // Default constructor for JPA
     protected Client() {}
-
-    public Client(String username, String email) {
-        this.username = username;
-        this.email = email;
+    public Client(long id, String username, String email) {
+        this.id=id;
+        this.email=email;
+        this.username=username;
     }
 
     // Getters and Setters
