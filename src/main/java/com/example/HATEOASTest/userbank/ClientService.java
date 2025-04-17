@@ -9,17 +9,17 @@ import java.util.Optional;
 public class ClientService {
 
     private final ClientRepository clientRepository;
-
-    public ClientService(ClientRepository clientRepository) {
+    private final ObjectMapper clientMapper;
+    public ClientService(ClientRepository clientRepository,ObjectMapper clientMapper) {
         this.clientRepository = clientRepository;
+        this.clientMapper = clientMapper;
     }
 
     public Client createUser(ClientRequest clientRequest) {
         if (clientRequest.username() == null || clientRequest.email() == null) {
             throw new IllegalArgumentException("Username and email cannot be null");
         }
-        ObjectMapper mapper = new ObjectMapper();
-        Client client = mapper.convertValue(clientRequest, Client.class);
+        Client client = clientMapper.convertValue(clientRequest, Client.class);
         return clientRepository.save(client);
     }
 

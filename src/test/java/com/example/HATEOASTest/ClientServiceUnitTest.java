@@ -5,6 +5,7 @@ import com.example.HATEOASTest.userbank.ClientNotFoundException;
 import com.example.HATEOASTest.userbank.ClientRepository;
 import com.example.HATEOASTest.userbank.ClientRequest;
 import com.example.HATEOASTest.userbank.ClientService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,8 @@ import static org.mockito.Mockito.when;
 public class ClientServiceUnitTest {
     @Mock
     ClientRepository clientRepository;
+    @Mock
+    ObjectMapper clientMapper;
     @InjectMocks
     ClientService clientService;
 
@@ -39,8 +42,9 @@ public class ClientServiceUnitTest {
     @Test
     void shouldCreateClientRecord_WhenValidInfoIsProvided(){
         //Given
-        when(clientRepository.save(any(Client.class))).thenReturn(client);
         ClientRequest cr = new ClientRequest("Winston Churchill","winston@gmail.com");
+        when(clientMapper.convertValue(cr, Client.class)).thenReturn(client);
+        when(clientRepository.save(any(Client.class))).thenReturn(client);
         //When
         Client savedClient = clientService.createUser(cr);
         //Then
