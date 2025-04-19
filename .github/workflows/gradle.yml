@@ -44,8 +44,12 @@ jobs:
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build #-DskipTests
+    - name: Run Unit Tests
+      run: ./gradlew test
+    - name: Run Integration Tests
+      run: ./gradlew integrationTest
+    - name: Build with Gradle Wrapper, skip the test and only assemble the jar
+      run: ./gradlew build -x test -x integrationTest
     - name: list current directory content
       run: ls -la
     # GitHub action jobs do not share their own workspace and the content, we can output some job values for subsequent jobs
