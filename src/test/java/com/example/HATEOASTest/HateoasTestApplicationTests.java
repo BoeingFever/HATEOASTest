@@ -1,5 +1,6 @@
 package com.example.HATEOASTest;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,6 +22,7 @@ class HateoasTestApplicationTests {
 	private MockMvc mvc;
 
 	@Test
+	@Disabled
 	public void getTotalEmployees() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.get("/employees").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());

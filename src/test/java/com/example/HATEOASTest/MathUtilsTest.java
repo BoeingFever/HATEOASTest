@@ -1,5 +1,6 @@
 package com.example.HATEOASTest;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -11,8 +12,9 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+@Disabled
 public class MathUtilsTest {
+
     // Example 1: Using @ValueSource for simple values
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})

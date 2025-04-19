@@ -29,7 +29,7 @@ public class FastTest {
     @Test
     @EnabledOnOs(OS.WINDOWS)
     public void addTest() throws InterruptedException {
-        BigDecimal expected = new BigDecimal(60);
+        BigDecimal expected = new BigDecimal(50);
         BigDecimal result = new BigDecimal(20).add(new BigDecimal(30));
         assertEquals(expected,result);
     }
