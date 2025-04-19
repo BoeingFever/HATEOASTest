@@ -17,9 +17,12 @@ import reactor.core.publisher.Mono;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ClientIntegrationTest {
+//Starts the application on a random port, ensuring no conflicts.
+public class ClientServiceIT {
     @Autowired
     private ClientRepository clientRepository;
+
+    //Spring injects the random port assigned to the embedded server
     @LocalServerPort
     private int port;
     private WebClient webClient;
