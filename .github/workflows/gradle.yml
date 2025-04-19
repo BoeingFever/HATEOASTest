@@ -16,7 +16,7 @@ on:
 
 jobs:
   build:
-    name: unit-test
+    name: test-and-build
     runs-on: ubuntu-latest
 
     steps:
@@ -66,7 +66,7 @@ jobs:
       run: echo 'Artifact ID is ${{ steps.upload-built-jar.outputs.artifact-id }}'
 
   docker-build:
-    name: build
+    name: docker-build
     runs-on: ubuntu-latest
     permissions:
       id-token: write
