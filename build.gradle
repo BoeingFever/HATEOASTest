@@ -61,22 +61,6 @@ publishing {
     }
 }
 
-tasks.register('integrationTest', Test) {
-    description = 'Runs integration tests.'
-    group = 'verification'
-    testClassesDirs = sourceSets.test.output.classesDirs
-    classpath = sourceSets.test.runtimeClasspath
+tasks.named('test') {
     useJUnitPlatform()
-    filter {
-        includeTestsMatching '*IT'
-    }
-//    mustRunAfter tasks.test
-    maxParallelForks = 1
-}
-tasks.check.dependsOn tasks.integrationTest
-tasks.test {
-    useJUnitPlatform()
-    filter {
-        excludeTestsMatching '*IT'
-    }
 }
