@@ -1,9 +1,6 @@
 package com.example.HATEOASTest.payroll;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -11,10 +8,12 @@ import java.util.Objects;
 public class Order {
 
     private @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     private String description;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20)", length = 20)
     private Status status;
 
     Order() {}
