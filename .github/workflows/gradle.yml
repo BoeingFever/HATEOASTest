@@ -27,9 +27,9 @@ jobs:
         image: postgres:16-alpine
         ports:
           - 5432:5432
-        # Provide the password for postgres
-#        env:
-#          POSTGRES_PASSWORD: postgres
+        # You must specify POSTGRES_PASSWORD to a non-empty value for the superuser
+        env:
+          POSTGRES_PASSWORD: postgres
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
