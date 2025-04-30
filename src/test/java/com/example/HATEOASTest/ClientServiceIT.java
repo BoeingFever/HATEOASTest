@@ -3,6 +3,8 @@ package com.example.HATEOASTest;
 import com.example.HATEOASTest.userbank.Client;
 import com.example.HATEOASTest.userbank.ClientRepository;
 import com.example.HATEOASTest.userbank.ClientRequest;
+import com.example.HATEOASTest.userbank.HealthStatus;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +13,18 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.containers.PostgreSQLContainer;
 import reactor.core.publisher.Mono;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Testcontainers
 //Starts the application on a random port, ensuring no conflicts.
 public class ClientServiceIT {
     @Autowired
@@ -26,6 +34,18 @@ public class ClientServiceIT {
     @LocalServerPort
     private int port;
     private WebClient webClient;
+
+    @Container
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
+            .withDatabaseName("testdb")
+            .withUsername("testuser")
+            .withPassword("testpass");
+    @DynamicPropertySource
+    static void configureDataSourceProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
 
     @BeforeEach
     void setUp() {
@@ -38,11 +58,10 @@ public class ClientServiceIT {
         clientRepository.deleteAll();
     }
 
-
     @Test
     void shouldCreateUserAndPersistToDatabase() {
         // Arrange
-        ClientRequest cr = new ClientRequest("Winston Churchill","winston@gmail.com");
+        ClientRequest cr = new ClientRequest("Winston Churchill","winston@gmail.com", HealthStatus.GOT_SICK);
 
         // Act
         Client createdUser = webClient.post()
@@ -58,12 +77,14 @@ public class ClientServiceIT {
         assertThat(createdUser.getId()).isNotNull();
         assertThat(createdUser.getUsername()).isEqualTo("Winston Churchill");
         assertThat(createdUser.getEmail()).isEqualTo("winston@gmail.com");
+        assertThat(createdUser.getStatus()).isEqualTo(HealthStatus.GOT_SICK);
 
         // Verify database persistence
         Client persistedUser = clientRepository.findById(createdUser.getId()).orElse(null);
         assertThat(persistedUser).isNotNull();
         assertThat(persistedUser.getUsername()).isEqualTo("Winston Churchill");
         assertThat(persistedUser.getEmail()).isEqualTo("winston@gmail.com");
+        assertThat(persistedUser.getStatus()).isEqualTo(HealthStatus.GOT_SICK);
     }
 
     @Test
@@ -83,7 +104,7 @@ public class ClientServiceIT {
 //                .map(entity -> entity.getStatusCode())
 //                .block();
 
-        // shorter and simpler alternative
+        // Below is shorter and simpler alternative
         HttpStatusCode resultStatus = webClient.get()
                 .uri("/api/users/999")
                 .exchangeToMono(response -> Mono.just(response.statusCode()))
