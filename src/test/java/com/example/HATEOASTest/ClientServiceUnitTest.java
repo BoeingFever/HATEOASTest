@@ -1,10 +1,6 @@
 package com.example.HATEOASTest;
 
-import com.example.HATEOASTest.userbank.Client;
-import com.example.HATEOASTest.userbank.ClientNotFoundException;
-import com.example.HATEOASTest.userbank.ClientRepository;
-import com.example.HATEOASTest.userbank.ClientRequest;
-import com.example.HATEOASTest.userbank.ClientService;
+import com.example.HATEOASTest.userbank.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,12 +33,12 @@ public class ClientServiceUnitTest {
     Client client;
     @BeforeEach
     void setUpBeforeEachCase(){
-        client = new Client(1L,"Winston Churchill","winston@gmail.com");
+        client = new Client("Winston Churchill","winston@gmail.com", HealthStatus.GOT_SICK);
     }
     @Test
     void shouldCreateClientRecord_WhenValidInfoIsProvided(){
         //Given
-        ClientRequest cr = new ClientRequest("Winston Churchill","winston@gmail.com");
+        ClientRequest cr = new ClientRequest("Winston Churchill","winston@gmail.com",HealthStatus.GOT_SICK);
         when(clientMapper.convertValue(cr, Client.class)).thenReturn(client);
         when(clientRepository.save(any(Client.class))).thenReturn(client);
         //When
@@ -55,7 +51,7 @@ public class ClientServiceUnitTest {
     @Test
     void shouldThrowIllegalArgumentException_WhenUserNameNull(){
         //Given
-        ClientRequest cr = new ClientRequest(null,"ramdom@gmail.com");
+        ClientRequest cr = new ClientRequest(null,"ramdom@gmail.com",HealthStatus.DYING);
         //When
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,()->clientService.createUser(cr));
         //Then
@@ -68,7 +64,7 @@ public class ClientServiceUnitTest {
     void shouldThrowIllegalArgumentException_WhenEmailEmpty(String invalidEmail){
         //This test method is mean to fail to show that my business logic miss to handle some cases
         //Given
-        ClientRequest cr = new ClientRequest("Tom",invalidEmail);
+        ClientRequest cr = new ClientRequest("Tom",invalidEmail,HealthStatus.DYING);
         //When
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,()->clientService.createUser(cr));
         //Then

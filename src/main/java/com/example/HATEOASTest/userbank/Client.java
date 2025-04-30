@@ -1,9 +1,6 @@
 package com.example.HATEOASTest.userbank;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Client {
@@ -15,12 +12,20 @@ public class Client {
     private String username;
     private String email;
 
+//    @Column(columnDefinition = "VARCHAR(20)", length = 20):
+//    Ensures the database column is VARCHAR(20) in PostgreSQL, avoiding the ENUM type error that Hibernate 6.x might trigger.
+//    @Enumerated(EnumType.STRING): Ensures Hibernate maps the Status enum to its string name (e.g., IN_PROGRESS)
+//    rather than its ordinal (e.g., 0), matching your application logic and test expectations.
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20)", length = 20)
+    private HealthStatus status;
+
     // Default constructor for JPA
     protected Client() {}
-    public Client(long id, String username, String email) {
-        this.id=id;
+    public Client(String username, String email, HealthStatus status) {
         this.email=email;
         this.username=username;
+        this.status=status;
     }
 
     // Getters and Setters
@@ -46,5 +51,13 @@ public class Client {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public HealthStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(HealthStatus status) {
+        this.status = status;
     }
 }
