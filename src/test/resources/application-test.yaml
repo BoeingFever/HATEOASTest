@@ -1,5 +1,7 @@
 spring:
-#  datasource:
+  datasource:
+    hikari:
+      connection-timeout: 120
 #    driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true

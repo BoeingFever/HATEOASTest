@@ -40,7 +40,7 @@ public class ClientServiceIT {
     private WebClient webClient;
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientServiceIT.class);
 
-//    @Container
+    @Container
     private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
             .withDatabaseName("testdb")
             .withUsername("testuser")
@@ -53,14 +53,6 @@ public class ClientServiceIT {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    @BeforeAll
-    static void postgreStarts(){
-        postgres.start();
-    }
-    @AfterAll
-    static void postgreKills(){
-        postgres.stop();
-    }
     @BeforeEach
     void setUp() {
         // Configure WebClient with the random port
