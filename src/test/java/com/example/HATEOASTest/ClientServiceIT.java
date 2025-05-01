@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 //Starts the application on a random port, ensuring no conflicts.
 public class ClientServiceIT {
     @Autowired
@@ -50,9 +50,7 @@ public class ClientServiceIT {
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
     }
-    static {
-        postgres.start();
-    }
+
     @BeforeEach
     void setUp() {
         // Configure WebClient with the random port
