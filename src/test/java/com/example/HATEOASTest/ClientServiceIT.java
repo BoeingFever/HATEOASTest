@@ -4,9 +4,12 @@ import com.example.HATEOASTest.userbank.Client;
 import com.example.HATEOASTest.userbank.ClientRepository;
 import com.example.HATEOASTest.userbank.ClientRequest;
 import com.example.HATEOASTest.userbank.HealthStatus;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -16,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -34,12 +38,14 @@ public class ClientServiceIT {
     @LocalServerPort
     private int port;
     private WebClient webClient;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientServiceIT.class);
 
-    @Container
+//    @Container
     private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
             .withDatabaseName("testdb")
             .withUsername("testuser")
-            .withPassword("testpass");
+            .withPassword("testpass")
+            .withLogConsumer(new Slf4jLogConsumer(LOGGER));
     @DynamicPropertySource
     static void configureDataSourceProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
@@ -47,6 +53,14 @@ public class ClientServiceIT {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
+    @BeforeAll
+    static void postgreStarts(){
+        postgres.start();
+    }
+    @AfterAll
+    static void postgreKills(){
+        postgres.stop();
+    }
     @BeforeEach
     void setUp() {
         // Configure WebClient with the random port
