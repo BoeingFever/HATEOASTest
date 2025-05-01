@@ -4,10 +4,7 @@ import com.example.HATEOASTest.userbank.Client;
 import com.example.HATEOASTest.userbank.ClientRepository;
 import com.example.HATEOASTest.userbank.ClientRequest;
 import com.example.HATEOASTest.userbank.HealthStatus;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 //Starts the application on a random port, ensuring no conflicts.
 public class ClientServiceIT {
     @Autowired
@@ -40,7 +38,7 @@ public class ClientServiceIT {
     private WebClient webClient;
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientServiceIT.class);
 
-    @Container
+//    @Container
     private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
             .withDatabaseName("testdb")
             .withUsername("testuser")
@@ -53,6 +51,14 @@ public class ClientServiceIT {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
+    @BeforeAll
+    static void postgreStarts(){
+        postgres.start();
+    }
+    @AfterAll
+    static void postgreKills(){
+        postgres.stop();
+    }
     @BeforeEach
     void setUp() {
         // Configure WebClient with the random port
